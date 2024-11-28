@@ -1,0 +1,6 @@
+# example entity account
+# column logical name statuscode
+
+
+{% assign accountDetails=entities['account'][user.parentcustomerid.id] %}
+{% assign accountStatus = accountDetails.statuscode.label %} 
