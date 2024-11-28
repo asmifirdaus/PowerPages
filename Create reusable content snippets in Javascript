@@ -1,0 +1,8 @@
+To create a reusable code in powerpages
+
+1. Create a content snippet with javascript code 
+Name : "User Details"
+2. Add the below lines of code in you javascript code 	
+- {{ snippets["User Details"] }}
+
+
