@@ -1,0 +1,18 @@
+{% fetchxml account %}
+<fetch version="1.0" top="1" output-format="xml-platform" mapping="logical" distinct="false">
+<entity name="account">
+    <attribute name="name" />
+    <attribute name="accountid" />
+     <attribute name="statuscode" /> 
+     <filter type="and"> 
+      <condition attribute="createdon" operator="le" value='{{ now | date_add_days: 1 | date: "yyyy-MM-dd HH:mm:ss" }}'  /> 
+      <condition attribute="name" operator="eq" value="{{user.parentcustomerid.name}}"/></filter> 
+     </entity></fetch>
+{% endfetchxml %} 
+{% assign accountSize = account.results.entities.size | plus : 0 %} 
+{% if accountSize > 0 %} 
+{% assign accountDetails=entities['account'][user.parentcustomerid.id] %}
+{% endif %}
+
+# accountDetails variable logged in user account record
+
