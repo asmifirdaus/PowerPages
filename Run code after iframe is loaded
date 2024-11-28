@@ -1,0 +1,3 @@
+$('#iframe-id').on( 'load', function() {
+    // code will run after iframe has finished loading
+} );
