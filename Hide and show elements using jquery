@@ -1,0 +1,30 @@
+# refer - https://oliverrodrigues365.com/2020/07/19/power-apps-portals-javascript-tip-01-hide-show-elements/
+
+Hide & Show Fields
+
+$("#<field name>").closest("td").find("div.control, div.info").hide(); // show();
+
+
+Hide & Show Section
+
+$("table[data-name='<section name>']").parent().hide(); // show();
+
+
+Hide & Show Tab
+
+$("div[data-name='<tab name>']").prev("h2.tab-title").hide();  // show();
+$("div[data-name='<tab name>']").hide();  // show();
+
+
+Hide & Show Entity List/Sub-grid column
+
+var list = $(".entity-grid")
+list.on("loaded", function () {
+    list.find("th:contains('<column display name>')").hide(); // show();
+    list.find("td[data-th='<column display name>']").hide(); // show();
+}); 
+
+
+Hide & Show Option Set value
+
+$("#<field name> option[value='< option set value>']").hide(); /
