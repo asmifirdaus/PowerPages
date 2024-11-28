@@ -1,13 +1,14 @@
 To create a reusable code in powerpages with parameters
 
-1. Create a web template with javascript code 
+1. Create a web template with javascript code
+2. Create a page template mapped with the web template
 Name : "User Details"
-2. Add the below lines of code in you javascript code [static value]
+3. Add the below lines of code in you javascript code [static value]
 - {% include 'User Details' my_param: 'Hello' %}
 
 Or
 
-2. Add the below lines of code in you javascript code [variable value]
+3. Add the below lines of code in you javascript code [variable value]
 
 {% assign test="Hello" %}
 {% include 'User Details' my_param: test %}
