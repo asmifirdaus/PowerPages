@@ -1,8 +1,15 @@
-To create a reusable code in powerpages
+To create a reusable code in powerpages with parameters
 
-1. Create a content snippet with javascript code 
+1. Create a web template with javascript code 
 Name : "User Details"
-2. Add the below lines of code in you javascript code 	
-- {{ snippets["User Details"] }}
+2. Add the below lines of code in you javascript code [static value]
+- {% include 'User Details' my_param: 'Hello' %}
+
+Or
+
+2. Add the below lines of code in you javascript code [variable value]
+
+{% assign test="Hello" %}
+{% include 'User Details' my_param: test %}
 
 
