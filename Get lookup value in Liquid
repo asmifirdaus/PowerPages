@@ -1,0 +1,6 @@
+# example entity account
+# column logical name cbrf_type
+
+
+{% assign accountDetails=entities['account'][user.parentcustomerid.id] %}
+{% assign accountType = accountDetails.cbrf_type.name %} 
