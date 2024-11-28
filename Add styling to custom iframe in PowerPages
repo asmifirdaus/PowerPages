@@ -1,0 +1,7 @@
+ <script>
+        $(document).ready(function() {
+            $('#iframe').load(function() {
+                $("#iframe").contents().find("head").append("<style>.text_color{color:red;}</style>");  
+            });
+        });
+</script>
