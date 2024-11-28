@@ -1,7 +1,13 @@
-# column logical name - cbrf_id
+// column logical name - cbrf_id
 
 
 $('#cbrf_id_name').val("-----"); //lookup value on field
 $("#cbrf_id_name").attr("value","-----"); //lookup value on field
 $("#cbrf_id").attr("value","-----"); //guid of lookup record 
 $("#cbrf_id_entityname").attr("value","cbrf_course"); // entity logical name - cbrf_course 
+
+
+//make field read only
+$('#<lookupname>').siblings("div.input-group-btn").find("button").prop("disabled", true);
+$('#<lookupname>>').siblings("div.input-group-btn").hide();
+
