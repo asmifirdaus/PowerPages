@@ -1,0 +1,30 @@
+
+// create a flow and add the flow to site and save the flow url in cbrf_settings [custom entity] value and call the flow using ajax in js function.
+
+
+function callFlow(guid){
+    {% assign flowURL = entities.cbrf_settings['//guid//'].cbrf_value %}
+   var _url= '{{flowURL}}';
+    var data = {};
+    data["guid"] = guid;
+    var payload = {};
+    payload.eventData = JSON.stringify(data);
+    shell
+        .ajaxSafePost({
+            type: "POST",
+            contentType: "application/json",
+            url: _url,
+            data: JSON.stringify(payload),
+            processData: false,
+            global: false,
+        })
+        .done(function (response) {
+                      alert("passed");
+
+        })
+        .fail(function (error) {
+
+            alert("failed");
+        });
+
+}
