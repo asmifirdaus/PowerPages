@@ -1,0 +1,7 @@
+//Reset button on entity list
+
+$('<button type="button" class="btn btn-link btn-clear" style="">Reset</button>')
+    .insertAfter('.btn-entitylist-filter-submit').on("click", function() {
+        $('#entitylist-filters select').val('');
+        $('.btn-entitylist-filter-submit').click();
+    });
