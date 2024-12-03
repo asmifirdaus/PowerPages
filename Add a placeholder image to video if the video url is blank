@@ -1,0 +1,17 @@
+//Placeholder image for video if the url is blank
+
+- Create a site setting [name - VideoURL] with video url 
+- Create a web file [partial url - Placeholder.jpg]and upload the placeholder image
+
+//code
+
+  {% assign video_url = settings['VideoURL'] %}
+  {% if video_url %}
+  <iframe frameborder="0" src="{{settings['VideoURL'] }}" style="width: 100%; height: auto; "></iframe>
+  {% else %}
+  <p id="abc">{{video_url}}</p>
+  <img src="/Placeholder.jpg"  style="width: 70%; height: auto; "/>
+
+  {% endif %}
+
+  </div>
