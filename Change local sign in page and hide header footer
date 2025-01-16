@@ -1,0 +1,46 @@
+Create a content snippet with name 'Account/SignIn/PageCopy'
+
+
+<script>
+$(document).ready(function(){
+$("#content .row").children("div.col-md-6").eq(1).remove();
+    $("#content-container").wrap('<div id="abcdiv" ></div>');
+$("#content-container").prepend('<div id="RegisterImage" style="flex:1"><img src="/RegisterPageImage" style="width:70%"></div>');
+})
+</script>
+<style>
+  #content .row  div.col-md-6{
+    width:100%
+  }
+#abcdiv {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#content-container{
+    display: flex;
+    flex-direction: row;
+}
+
+#ContentContainer_MainContent_MainContent_SecureRegister .row .col-lg-6
+{
+    width:100%;
+}
+
+
+    #content{
+width:50%;
+flex: 1;
+
+    }
+
+    .navbar-expand-xl.navbar.navbar-dark.static-top{
+
+display: none;
+}
+.footer{
+    display: none;
+}
+
+
+    </style>
