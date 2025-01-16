@@ -1,0 +1,54 @@
+1. Create a web template 
+
+<div class="layout-container">
+    <div class="left-navigation">
+        <!-- Left navigation content -->
+        <ul>
+            <li><a href="/page1">Page 1</a></li>
+            <li><a href="/page2">Page 2</a></li>
+            <li><a href="/page3">Page 3</a></li>
+        </ul>
+    </div>
+    <div class="right-content">
+        <!-- Page content goes here -->
+{%include 'Page Copy' %}
+    </div>
+</div>
+
+
+
+2. Create a page template mapped with the page template.
+3. Create a webpage with the page template
+4. Add the css to the webpage
+
+/* Overall container */
+.layout-container {
+    display: flex;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Fixed left navigation */
+.left-navigation {
+    width: 250px; /* Fixed width for the navigation */
+    background-color: #f4f4f4;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed; /* Make it stay in place */
+    height: 100%; /* Full height */
+}
+
+/* Scrollable right content */
+.right-content {
+    margin-left: 250px; /* Match the width of the left navigation */
+    width: calc(100% - 250px); /* Fill the remaining width */
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 20px;
+}
+
+/* Prevent overall body scrolling */
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent page scroll */
+    font-family: Arial, sans-serif;
+}
