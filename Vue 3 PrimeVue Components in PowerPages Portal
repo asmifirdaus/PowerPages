@@ -1,0 +1,97 @@
+Webpage html script
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/primevue/umd/primevue.min.js"></script>
+    <script src="https://unpkg.com/@primevue/themes/umd/aura.min.js"></script>
+
+{% raw %}
+<!-- @submit.prevent="submitForm" -->
+    <div id="app">
+        <p>Helloooooooo</p>
+        <form v-on:submit.prevent="submitForm">
+
+     <datepicker id="date" v-model="date"></datepicker>
+        <inputtext id="name" v-model="formData.name" ></inputtext>
+
+        <button type="submit" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+          </button>
+    </form>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
+
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      const app = createApp({
+        data() {
+          const date = ref();
+
+          return {
+            errorMessage : '',
+            date,
+            formData: {
+        name: ''
+      }
+    
+          };
+        },
+        methods: {
+     
+      async submitForm() {
+      
+
+        this.isSubmitting = true;
+        this.successMessage = '';
+        this.errorMessage = '';
+
+        try {
+          const response = await fetch('/_api/data/v9.2/custom_entity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+              name: this.formData.name,
+              email: this.formData.email,
+              message: this.formData.message,
+              category: this.formData.category,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Error submitting the form.');
+          }
+
+          this.successMessage = 'Form submitted successfully!';
+          this.formData = { name: '', email: '', message: '', category: '' };
+        } catch (error) {
+          this.errorMessage = error.message || 'An error occurred.';
+        } finally {
+          this.isSubmitting = false;
+        }
+      },
+    },
+        components:{
+        'inputtext':PrimeVue.InputText,
+        'datepicker':PrimeVue.DatePicker
+      }
+      });
+
+      app.use(PrimeVue.Config, {
+        theme: {
+            preset: PrimeVue.Themes.Aura
+        }
+      });
+
+      //app.component('p-datepicker', PrimeVue.DatePicker);
+
+      app.mount('#app');
+    </script>
+
+    {% endraw %}
+
+
