@@ -1,0 +1,78 @@
+Vue file
+
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+{% raw %}
+
+<div id="app">
+  <h1>Account Form</h1>
+  <form @submit.prevent="handleSubmit">
+    <label for="account">Select an Account:</label>
+    <select v-model="selectedAccount" id="account">
+      <option value="" disabled>Select an account</option>
+      <option v-for="account in accounts" :key="account.accountid" :value="account.accountid">
+        {{ account.name }}
+      </option>
+    </select>
+    <p v-if="error" class="error">{{ error }}</p>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p v-if="selectedAccount">
+    You selected: <strong>{{ getAccountName }}</strong>
+  </p>
+</div>
+
+<script>
+  const { createApp } = Vue;
+
+  createApp({
+    data() {
+      return {
+        accounts: [],
+        selectedAccount: "",
+        error: null,
+      };
+    },
+    mounted() {
+      this.fetchAccounts();
+    },
+    methods: {
+      async fetchAccounts() {
+        const apiUrl = "/_api/accounts?$select=name,accountid&$filter=statuscode eq 1"; // Adjust filter as needed
+
+        try {
+          const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+          console.log("error");
+          };
+
+          const data = await response.json();
+          this.accounts = data.value; // Assign fetched data
+        } catch (error) {
+          console.error("err");
+        }
+      },
+      getAccountName() {
+        const account = this.accounts.find((acc) => acc.accountid === this.selectedAccount);
+        return account ? account.name : "Unknown";
+      },
+      handleSubmit() {
+        if (this.selectedAccount) {
+          alert("selected");
+        } else {
+          alert("Please select an account.");
+        }
+      },
+    },
+  }).mount("#app");
+</script>
+{% endraw %}
+
