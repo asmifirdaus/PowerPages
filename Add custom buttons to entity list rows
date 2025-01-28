@@ -1,0 +1,21 @@
+
+
+
+$(document).ready(function () {
+
+  $(".entitylist.entity-grid").on("loaded", function () {
+    $(".entitylist.entity-grid .view-grid").find("thead>tr").append("<td style='color: #B90E31;  '>SubmitPar</td>")
+
+     $(this).children(".view-grid").find("tr[data-id]").each(function (i, e){
+
+        var id = $(this).attr("data-id");
+
+console.log(id);
+
+        $(this).append("<td><input type='text'   style='width: 50px;'></td><td><a style='color:green'>Approve</a><br><a style='color:red'>Deny</a></td>");
+
+     });
+
+  });
+
+});
