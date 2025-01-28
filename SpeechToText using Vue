@@ -1,0 +1,104 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure Speech-to-Text with Vue 3</title>
+  
+  <!-- Include Vue 3 -->
+  <script src="https://unpkg.com/vue@3"></script>
+  
+  <!-- Include Azure Speech SDK -->
+  <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .error {
+      color: red;
+    }
+    .recognized-text {
+      font-size: 18px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Azure Speech-to-Text with Vue 3</h1>
+    <button @click="startRecognition" :disabled="isRecognizing">
+      {{ isRecognizing ? 'Listening...' : 'Start Recognition' }}
+    </button>
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <p v-if="recognizedText" class="recognized-text">
+      <strong>Recognized Text:</strong> {{ recognizedText }}
+    </p>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    const App = {
+      setup() {
+        const recognizedText = ref("");
+        const isRecognizing = ref(false);
+        const errorMessage = ref("");
+
+        const startRecognition = () => {
+          const subscriptionKey = "%%%%%%%%%%%%%%%%"; // Replace with your key
+          const region = "$$$$$$$$$$$$$$$$$"; // Replace with your region
+
+          if (!subscriptionKey || !region) {
+            errorMessage.value = "Please provide your Azure Subscription Key and Region.";
+            return;
+          }
+
+          isRecognizing.value = true;
+          errorMessage.value = "";
+
+          const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(subscriptionKey, region);
+          speechConfig.speechRecognitionLanguage = "en-US";
+
+          const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+
+          const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
+
+          recognizer.recognizeOnceAsync(
+            (result) => {
+              isRecognizing.value = false;
+              if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+                recognizedText.value = result.text;
+              } else {
+                recognizedText.value = "No speech recognized.";
+              }
+              recognizer.close();
+            },
+            (err) => {
+              isRecognizing.value = false;
+             // errorMessage.value = Recognition error: ${err};
+              console.error("Recognition error:", err);
+              recognizer.close();
+            }
+          );
+        };
+
+        return { recognizedText, isRecognizing, startRecognition, errorMessage };
+      },
+    };
+
+    createApp(App).mount('#app');
+  </script>
+</body>
+</html>
