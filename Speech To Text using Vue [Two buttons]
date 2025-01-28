@@ -1,0 +1,94 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure Speech with Vue 3</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 10px;
+      font-size: 1rem;
+    }
+    p {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Azure Speech-to-Text</h1>
+    <p>Status: {{ isRecording ? 'Recording...' : 'Idle' }}</p>
+    <p>Transcription: {{ transcription }}</p>
+    <button @click="startRecording" :disabled="isRecording">Start Recording</button>
+    <button @click="stopRecording" :disabled="!isRecording">Stop Recording</button>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          isRecording: false,
+          transcription: '',
+          audioConfig: null,
+          recognizer: null,
+        };
+      },
+      methods: {
+        async startRecording() {
+          try {
+            // Azure Speech SDK Configuration
+            const subscriptionKey = 'GKwvB30JEV0E4rrv5gsmmFXrYXWqJtoxMFqRinTWZ7F2LUY23c8tJQQJ99BAACYeBjFXJ3w3AAAYACOGWCce'; // Replace with your key
+            const region = 'eastus'; // Replace with your Azure region
+
+            const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(subscriptionKey, region);
+            speechConfig.speechRecognitionLanguage = 'en-US';
+
+            this.audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+            this.recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, this.audioConfig);
+
+            this.isRecording = true;
+            this.transcription = '';
+
+            this.recognizer.recognizing = (s, e) => {
+              //console.log(Recognizing: ${e.result.text});
+            };
+
+            this.recognizer.recognized = (s, e) => {
+              if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+               // console.log(Recognized: ${e.result.text});
+                this.transcription += e.result.text + ' ';
+              } else {
+                console.log('Speech not recognized.');
+              }
+            };
+
+            this.recognizer.startContinuousRecognitionAsync();
+          } catch (error) {
+            alert('Error initializing Azure Speech Service: ' + error.message);
+          }
+        },
+        stopRecording() {
+          if (this.recognizer) {
+            this.recognizer.stopContinuousRecognitionAsync(() => {
+              console.log('Recognition stopped.');
+              this.isRecording = false;
+            });
+          }
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>
