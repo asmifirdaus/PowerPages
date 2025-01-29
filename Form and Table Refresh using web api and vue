@@ -1,0 +1,123 @@
+
+
+
+<script src="https://unpkg.com/vue@3"></script>
+ 
+ 
+{% raw %}
+   <div id="app">
+        <h2>Submit New Record</h2>
+        <form @submit.prevent="submitForm">
+            <select id="dropdown" v-model="selectedValue">
+                <option v-for="(label, key) in options" :key="key" :value="key">
+                    {{ label }}
+                </option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Existing Records</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in records" :key="item.id">
+                    <td>{{ item.name }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        (function (webapi, $) {
+            function safeAjax(ajaxOptions) {
+                var deferredAjax = $.Deferred();
+
+                if (typeof shell !== "undefined" && shell.getTokenDeferred) {
+                    shell.getTokenDeferred().done(function (token) {
+                        ajaxOptions.headers = ajaxOptions.headers || {};
+                        ajaxOptions.headers["__RequestVerificationToken"] = token;
+
+                        $.ajax(ajaxOptions)
+                            .done(function (data, textStatus, jqXHR) {
+                                validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+                            })
+                            .fail(deferredAjax.reject);
+                    }).fail(function () {
+                        deferredAjax.rejectWith(this, arguments);
+                    });
+                } else {
+                    // If shell is not available, make the request without the token
+                    $.ajax(ajaxOptions)
+                        .done(deferredAjax.resolve)
+                        .fail(deferredAjax.reject);
+                }
+
+                return deferredAjax.promise();
+            }
+
+            webapi.safeAjax = safeAjax;
+        })(window.webapi = window.webapi || {}, jQuery);
+
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    selectedValue: '', // Holds the selected key
+                    options: {
+                        335790000: 'Email',
+                        2: 'Option Two',
+                        3: 'Option Three'
+                    },
+                    records: [],
+                    API_URL: "/_api/geoak_employees"
+                };
+            },
+            methods: {
+                fetchRecords() {
+                    webapi.safeAjax({
+                        type: "GET",
+                        url: this.API_URL,
+                        contentType: "application/json",
+                        success: (res) => { // Use arrow function to retain this
+                            this.records = res.value.map(item => ({
+                                id: item.geoak_employeeidentifier,
+                                name: item.geoak_contactmethod,
+                            }));
+                        }
+                    }).fail((response) => {
+                        alert("Error: Web API is not available...");
+                    });
+                },
+
+                submitForm() {
+                    webapi.safeAjax({
+                        type: "POST",
+                        url: this.API_URL,
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "geoak_contactmethod": this.selectedValue // Replace with your global choice field name
+                        }),
+                        success: () => { // Use arrow function to retain this
+                            alert("Record added successfully!");
+                            this.fetchRecords(); // Refresh records after submission
+                        }
+                    }).fail((response) => {
+                        alert( "Error: Web API is not available...");
+                    });
+                }
+            },
+            mounted() {
+                                setTimeout(() => {
+                    this.fetchRecords();
+                }, 1000);
+
+            }
+        });
+
+        app.mount("#app");
+    </script>
+  {% endraw %}
